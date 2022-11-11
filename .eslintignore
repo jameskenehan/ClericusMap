@@ -1,0 +1,23 @@
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
+.eslintcache
+
+# Dependency directory
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+/node_modules
+
+# build
+.build/*
+.build-dev/*
+
+# assets
+.src/assets/*
+
+# misc
+.DS_Store
+
+# environment variables
+.env.production
+.env.development
+.env.example

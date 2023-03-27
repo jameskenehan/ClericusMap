@@ -1,15 +1,14 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-
+import MapData from '../assets/data.example.json';
 import '../assets/leaflet/css/MarkerCluster.css';
 import '../assets/leaflet/leaflet.css';
 import markerIconPath from '../assets/leaflet/images/marker-icon.png';
+import OutputEvent from './OutputEvent';
 
 function MapComponent() {
-  const position = [53.3497645, -6.2602732];
-
-  const markerIcon = new L.Icon({
+  const icon = new L.Icon({
     iconUrl: markerIconPath,
     iconRetinaUrl: markerIconPath,
     iconAnchor: null,
@@ -21,6 +20,36 @@ function MapComponent() {
     className: 'leaflet-default-icon-path custom-marker',
   });
 
+  const outputMarkers = () => {
+    const newMarkers = MapData.map((map) => {
+      const { _id, latitude, longitude, label, locality, country, events } =
+        map;
+      const popup =
+        typeof latitude !== 'undefined' && typeof longitude !== 'undefined' ? (
+          <Popup>
+            <div>
+              <h6>
+                {label}
+                <br />
+              </h6>
+              <h6>{locality}</h6>
+              <h6>{country} </h6>
+              {events.map((map2) => OutputEvent(map2))}
+            </div>
+          </Popup>
+        ) : null;
+      return (
+        <Marker icon={icon} key={_id} position={[latitude, longitude]}>
+          {popup}
+        </Marker>
+      );
+    });
+    return newMarkers;
+  };
+  const markers = outputMarkers();
+
+  console.log(markers);
+
   return (
     <div className="container">
       <div className="row">
@@ -31,16 +60,16 @@ function MapComponent() {
       <div className="row">
         <div className="col">
           <div className="map-container">
-            <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
+            <MapContainer
+              center={[53.37283, -6.5984]}
+              zoom={7}
+              scrollWheelZoom={false}
+            >
               <TileLayer
-                attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               />
-              <Marker position={position} icon={markerIcon}>
-                <Popup>
-                  A pretty CSS3 popup. <br /> Easily customizable.
-                </Popup>
-              </Marker>
+              {markers}
             </MapContainer>
           </div>
         </div>
@@ -48,4 +77,5 @@ function MapComponent() {
     </div>
   );
 }
+
 export default MapComponent;
